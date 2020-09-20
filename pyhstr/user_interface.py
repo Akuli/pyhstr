@@ -118,7 +118,7 @@ class UserInterface:
             y for x in [
                 list(r) for r in [
                     range(start, end) for start, end in [
-                        m.span() for m in re.finditer(self._re_compile(self.search_string), entry)
+                        m.span() for m in self._re_compile(self.search_string).finditer(entry)
                     ]
                 ]
             ] for y in x
