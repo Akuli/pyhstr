@@ -108,17 +108,31 @@ class UserInterface:
         self._addstr(1, 0, "".ljust(curses.COLS), COLORS["normal"])
         self._addstr(1, 0, prompt, COLORS["highlighted-red"])
 
+    def show_regex_error(self):
+        prompt = f"Invalid regex. Try again."
+        self._addstr(1, 0, "".ljust(curses.COLS), COLORS["normal"])
+        self._addstr(1, 0, prompt, COLORS["highlighted-red"])
+
     def get_substring_indexes(self, entry):
         return [
             y for x in [
                 list(r) for r in [
                     range(start, end) for start, end in [
-                        m.span() for m in re.finditer(self.search_string, entry)
+                        m.span() for m in re.finditer(self._re_compile(self.search_string), entry)
                     ]
                 ]
             ] for y in x
         ]
 
+    def _re_compile(self, search_string):
+        if self.app.case_sensitivity:
+            if self.app.regex_match:
+                return re.compile(search_string)
+            return re.compile(re.escape(search_string))
+        else:
+            if self.app.regex_match:
+                return re.compile(search_string, re.IGNORECASE)
+            return re.compile(re.escape(search_string), re.IGNORECASE)
 
 class EntryCounter:
     def __init__(self, app):

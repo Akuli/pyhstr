@@ -31,22 +31,14 @@ class App:
         self.user_interface.page.selected.value = 0
         self.user_interface.page.value = 1
 
-        if not self.regex_match:
-            if self.case_sensitivity:
-                self.all_entries[self.view] = [
-                    cmd for cmd in self.all_entries[self.view]
-                    if self.user_interface.search_string in cmd
-                ]
-            else:
-                self.all_entries[self.view] = [
-                    cmd for cmd in self.all_entries[self.view]
-                    if self.user_interface.search_string.lower() in cmd.lower()
-                ]
-        else:
+        try:
             self.all_entries[self.view] = [
                 cmd for cmd in self.all_entries[self.view]
-                if re.search(self.user_interface.search_string, cmd)
+                if self.user_interface._re_compile(self.user_interface.search_string).search(self.user_interface.search_string)
             ]
+        except re.error:
+            self.user_interface.show_regex_error()
+            return
 
         self.user_interface.populate_screen()
 
