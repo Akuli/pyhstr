@@ -118,21 +118,21 @@ class UserInterface:
             y for x in [
                 list(r) for r in [
                     range(start, end) for start, end in [
-                        m.span() for m in self._re_compile(self.search_string).finditer(entry)
+                        m.span() for m in self.create_search_string_regex().finditer(entry)
                     ]
                 ]
             ] for y in x
         ]
 
-    def _re_compile(self, search_string):
+    def create_search_string_regex(self):
         if self.app.case_sensitivity:
             if self.app.regex_match:
-                return re.compile(search_string)
-            return re.compile(re.escape(search_string))
+                return re.compile(self.search_string)
+            return re.compile(re.escape(self.search_string))
         else:
             if self.app.regex_match:
-                return re.compile(search_string, re.IGNORECASE)
-            return re.compile(re.escape(search_string), re.IGNORECASE)
+                return re.compile(self.search_string, re.IGNORECASE)
+            return re.compile(re.escape(self.search_string), re.IGNORECASE)
 
 class EntryCounter:
     def __init__(self, app):

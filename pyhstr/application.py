@@ -34,7 +34,7 @@ class App:
         try:
             self.all_entries[self.view] = [
                 cmd for cmd in self.all_entries[self.view]
-                if self.user_interface._re_compile(self.user_interface.search_string).search(self.user_interface.search_string)
+                if self.user_interface.create_search_string_regex().search(self.user_interface.search_string)
             ]
         except re.error:
             self.user_interface.show_regex_error()
