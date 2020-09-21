@@ -126,15 +126,20 @@ class UserInterface:
         ]
 
     def create_search_string_regex(self):
-        if self.app.case_sensitivity:
-            if self.app.regex_match:
-                return re.compile(self.search_string)
-            return re.compile(re.escape(self.search_string))
-        else:
-            if self.app.regex_match:
-                return re.compile(self.search_string, re.IGNORECASE)
-            return re.compile(re.escape(self.search_string), re.IGNORECASE)
-
+        try:
+            if self.app.case_sensitivity:
+                if self.app.regex_match:
+                    return re.compile(self.search_string)
+                return re.compile(re.escape(self.search_string))
+            else:
+                if self.app.regex_match:
+                    return re.compile(self.search_string, re.IGNORECASE)
+                return re.compile(re.escape(self.search_string), re.IGNORECASE)
+        except re.error:
+            self.show_regex_error()
+            self.app.all_entries[self.app.view] = []
+            self.populate_screen()
+            return re.compile('')
 
 class EntryCounter:
     def __init__(self, app):
@@ -144,7 +149,10 @@ class EntryCounter:
     def move(self, direction):
         page_size = self.app.user_interface.page.get_page_size()
         self.value += direction
-        self.value %= page_size
+        try:
+            self.value %= page_size
+        except ZeroDivisionError:
+            return
         if direction == 1:
             if self.value == 0:
                 self.app.user_interface.page.turn(1)
