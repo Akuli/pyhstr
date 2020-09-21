@@ -139,7 +139,7 @@ class UserInterface:
             self.show_regex_error()
             self.app.all_entries[self.app.view] = []
             self.populate_screen()
-            return re.compile('')
+            return re.compile("this regex doesn't match anything^") # thanks Akuli
 
 class EntryCounter:
     def __init__(self, app):
