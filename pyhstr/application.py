@@ -88,7 +88,9 @@ class App:
                 for cmd_idx in reversed(cmd_indexes):
                     readline.remove_history_item(cmd_idx)
 
-                readline.write_history_file(str(SHELLS[SHELL]["hist"]))
+                history_path = SHELLS[SHELL]["hist"]
+                assert history_path is not None
+                readline.write_history_file(str(history_path))
 
             elif SHELL == Shell.IPYTHON:
                 import IPython
